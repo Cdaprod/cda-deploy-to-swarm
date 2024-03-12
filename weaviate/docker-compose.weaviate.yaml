@@ -1,0 +1,34 @@
+version: '3.8'
+
+services:
+  weaviate:
+    container_name: cda_weaviate
+    image: cdaprod/cda-weaviate
+    ports:
+      - "8080:8080"
+      - "50051:50051"
+    environment:
+      AUTHENTICATION_ANONYMOUS_ACCESS_ENABLED: 'true'
+      PERSISTENCE_DATA_PATH: '/var/lib/weaviate'
+      QUERY_DEFAULTS_LIMIT: '25'
+      DEFAULT_VECTORIZER_MODULE: 'text2vec-huggingface'
+      ENABLE_MODULES: 'backup-s3, text2vec-cohere,text2vec-huggingface,text2vec-palm,text2vec-openai,generative-openai,generative-cohere,generative-palm,ref2vec-centroid,reranker-cohere,qna-openai'
+      BACKUP_S3_BUCKET: 'weaviate-backups'
+      BACKUP_S3_ENDPOINT: 'minio:9000'
+      BACKUP_S3_ACCESS_KEY_ID: 'minio'
+      BACKUP_S3_SECRET_ACCESS_KEY: 'minio123'
+      BACKUP_S3_USE_SSL: 'false'
+      MINIO_STORAGE_BUCKET_NAME: 'weaviate-backups'
+    volumes:
+      - weaviate_data:/var/lib/weaviate
+    depends_on:
+      - minio
+    networks:
+      - app_network
+
+volumes:
+  weaviate_data:
+
+networks:
+  app_network:
+    driver: overlay
