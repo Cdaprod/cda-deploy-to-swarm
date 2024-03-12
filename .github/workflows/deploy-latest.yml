@@ -25,14 +25,14 @@ jobs:
         run: |
           export MINIO_ACCESS_KEY=${{ secrets.MINIO_ACCESS_KEY }}
           export MINIO_SECRET_KEY=${{ secrets.MINIO_SECRET_KEY }}
-          docker stack deploy -c ./minio/docker-compose.minio.yml minio_stack
+          docker stack deploy -c ./minio/docker-compose.minio.yaml minio_stack
 
       - name: Deploy Weaviate Stack
         run: |
           # Set any required environment variables for Weaviate here
-          docker stack deploy -c ./weaviate/docker-compose.weaviate.yml weaviate_stack
+          docker stack deploy -c ./weaviate/docker-compose.weaviate.yaml weaviate_stack
 
       - name: Deploy NGINX Stack
         run: |
           # If you have environment variables for NGINX, set them here
-          docker stack deploy -c ./nginx-server/docker-compose.nginx.yml nginx_stack
+          docker stack deploy -c ./nginx-server/docker-compose.nginx.yaml nginx_stack
