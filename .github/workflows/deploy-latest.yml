@@ -7,7 +7,7 @@ on:
 
 jobs:
   deploy:
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v3
@@ -32,7 +32,7 @@ jobs:
           # Set any required environment variables for Weaviate here
           docker stack deploy -c ./weaviate/docker-compose.weaviate.yaml weaviate_stack
 
-      - name: Deploy NGINX Stack
-        run: |
+      #- name: Deploy NGINX Stack
+        #run: |
           # If you have environment variables for NGINX, set them here
-          docker stack deploy -c ./nginx-server/docker-compose.nginx.yaml nginx_stack
+          #docker stack deploy -c ./nginx-server/docker-compose.nginx.yaml nginx_stack
