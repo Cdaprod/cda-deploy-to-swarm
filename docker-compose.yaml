@@ -33,7 +33,7 @@ services:
 
  weaviate:
    container_name: cda_weaviate
-   image: semitechnologies/weaviate:latest
+   image: cr.weaviate.io/semitechnologies/weaviate:latest
    ports:
      - "8080:8080"
    environment:
