@@ -29,10 +29,10 @@ jobs:
 
       - name: Deploy Weaviate Stack
         run: |
-          # Set any required environment variables for Weaviate here
+          # Set any environment variables for Weaviate here
           docker stack deploy -c ./weaviate/docker-compose.weaviate.yaml weaviate_stack
 
-      #- name: Deploy NGINX Stack
-        #run: |
-          # If you have environment variables for NGINX, set them here
-          #docker stack deploy -c ./nginx-server/docker-compose.nginx.yaml nginx_stack
+      - name: Deploy NGINX Stack
+        run: |
+          # Set any environment variables for NGINX here
+          docker stack deploy -c ./nginx-server/docker-compose.nginx.yaml nginx_stack

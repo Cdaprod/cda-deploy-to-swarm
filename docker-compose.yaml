@@ -2,14 +2,16 @@ version: '3.8'
 
 services:
   web:
-    image: ghcr.io/cdaprod/cda-minio-control:latest
+    image: cdaprod/cda-minio-control:latest
     environment:
-      - OPENAI_API_KEY=${OPENAI_API_KEY}
-      - MINIO_ENDPOINT=${MINIO_ENDPOINT}
-      - MINIO_ACCESS_KEY=${MINIO_ACCESS_KEY}
-      - MINIO_SECRET_KEY=${MINIO_SECRET_KEY}
+      OPENAI_API_KEY: ${OPENAI_API_KEY}
+      MINIO_ENDPOINT: minio:9000
+      MINIO_ACCESS_KEY: ${MINIO_ACCESS_KEY}
+      MINIO_SECRET_KEY: ${MINIO_SECRET_KEY}
     ports:
       - "8000:8000"
+    networks:
+      - app_network
     depends_on:
       - weaviate
       - minio
@@ -21,37 +23,59 @@ services:
       restart_policy:
         condition: on-failure
 
- minio:
-   container_name: cda_minio
-   image: cdaprod/cda-minio:latest
-   volumes:
-     - ./minio/data:/data
-   ports:
-     - "9000:9000"
-     - "9001:9001"
-   command: server /data --console-address ":9001"
+  minio:
+    image: cdaprod/cda-minio:latest
+    volumes:
+      - minio_data:/data
+    command: server /data --console-address ":9001"
+    networks:
+      - app_network
+    secrets:
+      - minio_access_key
+      - minio_secret_key
 
- weaviate:
-   container_name: cda_weaviate
-   image: semitechnologies/weaviate:latest
-   ports:
-     - "8080:8080"
-   environment:
-     AUTHENTICATION_ANONYMOUS_ACCESS_ENABLED: 'true'
-     PERSISTENCE_DATA_PATH: '/var/lib/weaviate'
-     QUERY_DEFAULTS_LIMIT: 25
-     DEFAULT_VECTORIZER_MODULE: 'none'
-     ENABLE_MODULES: 'backup-s3, text2vec-cohere,text2vec-huggingface,text2vec-palm,text2vec-openai,generative-openai,generative-cohere,generative-palm,ref2vec-centroid,reranker-cohere,qna-openai'
-     BACKUP_S3_BUCKET: 'weaviate-backups'
-     BACKUP_S3_ENDPOINT: 'minio:9000'
-     BACKUP_S3_ACCESS_KEY_ID: 'minio'
-     BACKUP_S3_SECRET_ACCESS_KEY: 'minio123'
-     BACKUP_S3_USE_SSL: 'false'
-     CLUSTER_HOSTNAME: 'node1'
-   volumes:
-     - ./weaviate/data:/var/lib/weaviate
-   depends_on:
-     - minio
+  weaviate:
+    image: cdaprod/cda-weaviate:latest
+    environment:
+      OPENAI_API_KEY: ${OPENAI_API_KEY}
+      AUTHENTICATION_ANONYMOUS_ACCESS_ENABLED: 'true'
+      PERSISTENCE_DATA_PATH: '/var/lib/weaviate'
+      QUERY_DEFAULTS_LIMIT: 25
+      DEFAULT_VECTORIZER_MODULE: 'text2vec-openai'
+      ENABLE_MODULES: 'backup-s3, text2vec-openai'
+      BACKUP_S3_BUCKET: 'weaviate-backups'
+      BACKUP_S3_ENDPOINT: 'minio:9000'
+      BACKUP_S3_ACCESS_KEY_ID: 'minio'
+      BACKUP_S3_SECRET_ACCESS_KEY: 'minio123'
+      BACKUP_S3_USE_SSL: 'false'
+      CLUSTER_HOSTNAME: 'node1'
+    volumes:
+      - weaviate_data:/var/lib/weaviate
+    networks:
+      - app_network
+    depends_on:
+      - minio
+
+  nginx:
+    image: cdaprod/cda-nginx:latest
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+    networks:
+      - app_network
+
+networks:
+  app_network:
+    driver: overlay
 
 volumes:
   minio_data:
+  weaviate_data:
+
+secrets:
+  minio_access_key:
+    external: true
+  minio_secret_key:
+    external: true
