@@ -40,3 +40,12 @@ jobs:
         push: true
         tags: cdaprod/cda-weaviate:latest
         platforms: linux/amd64,linux/arm64
+        
+    - name: Build and push custom NGINX image
+      uses: docker/build-push-action@v3
+      with:
+        context: ./nginx
+        file: ./nginx/Dockerfile
+        push: true
+        tags: cdaprod/cda-nginx:latest
+        platforms: linux/amd64,linux/arm64

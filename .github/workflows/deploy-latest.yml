@@ -21,8 +21,8 @@ jobs:
 
       - name: Deploy MinIO Stack
         run: |
-          export MINIO_ROOT_USER=${{ secrets.MINIO_ACCESS_KEY }}
-          export MINIO_ROOT_PASSWORD=${{ secrets.MINIO_SECRET_KEY }}
+          export MINIO_ROOT_USER=${{ secrets.MINIO_ROOT_USER }}
+          export MINIO_ROOT_PASSWORD=${{ secrets.MINIO_ROOT_PASSWORD }}
           docker stack deploy -c ./minio/docker-compose.minio.yaml minio_stack
 
       - name: Deploy Weaviate Stack
@@ -33,4 +33,4 @@ jobs:
       - name: Deploy NGINX Stack
         run: |
           # Set any environment variables for NGINX here
-          # docker stack deploy -c ./nginx-server/docker-compose.nginx.yaml nginx_stack
+          docker stack deploy -c ./nginx/docker-compose.nginx.yaml nginx_stack
