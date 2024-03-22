@@ -2,6 +2,10 @@ name: Deploy Services
 
 on:
   dispatch_workflow:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
 
 jobs:
   deploy:
