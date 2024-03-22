@@ -1,15 +1,16 @@
 name: Deploy Services
 
 on:
-  dispatch_workflow:
-  push:
-    branches: [main]
-  pull_request:
+  workflow_run:
+    workflows: ["Build and Push Docker Images"] # Name of the build workflow
+    types:
+      - completed
     branches: [main]
 
 jobs:
   deploy:
     runs-on: self-hosted
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v3
@@ -31,10 +32,8 @@ jobs:
 
       - name: Deploy Weaviate Stack
         run: |
-          # Set any environment variables for Weaviate here
           docker stack deploy -c ./weaviate/docker-compose.weaviate.yaml weaviate_stack
 
       - name: Deploy NGINX Stack
         run: |
-          # Set any environment variables for NGINX here
           docker stack deploy -c ./nginx/docker-compose.nginx.yaml nginx_stack
