@@ -2,10 +2,11 @@ name: Deploy Services
 
 on:
   workflow_run:
-    workflows: ["Build and Push Docker Images"] # Name of the build workflow
+    workflows: ["Build and Push Docker Images"]
     types:
       - completed
     branches: [main]
+  workflow_dispatch:
 
 jobs:
   deploy:
