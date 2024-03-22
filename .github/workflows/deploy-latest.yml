@@ -35,4 +35,4 @@ jobs:
       - name: Deploy NGINX Stack
         run: |
           # Set any environment variables for NGINX here
-          docker stack deploy -c ./nginx-server/docker-compose.nginx.yaml nginx_stack
+          #docker stack deploy -c ./nginx-server/docker-compose.nginx.yaml nginx_stack
