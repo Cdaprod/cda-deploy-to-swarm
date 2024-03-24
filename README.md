@@ -5,6 +5,23 @@
 
 <!-- DIRECTORY_TREE_START -->
 ```
+.
+├── DIRECTORY_TREE.txt
+├── README.md
+├── docker-compose.yaml
+├── minio
+│   ├── Dockerfile
+│   ├── docker-compose.minio.yaml
+│   └── entrypoint.sh
+├── nginx
+│   ├── Dockerfile
+│   ├── docker-compose.nginx.yaml
+│   └── nginx.conf
+└── weaviate
+    ├── Dockerfile
+    └── docker-compose.weaviate.yaml
+
+3 directories, 11 files
 
 ```
 <!-- DIRECTORY_TREE_END -->
