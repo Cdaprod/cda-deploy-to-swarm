@@ -10,8 +10,13 @@
 ├── DIRECTORY_TREE.txt
 ├── README.md
 ├── docker-compose.yaml
+├── jupyter
+│   ├── Dockerfile
+│   ├── README.md
+│   └── docker-compose.jupyter.yaml
 ├── minio
 │   ├── Dockerfile
+│   ├── README.md
 │   ├── docker-compose.minio.yaml
 │   └── entrypoint.sh
 ├── nginx
@@ -22,7 +27,7 @@
     ├── Dockerfile
     └── docker-compose.weaviate.yaml
 
-3 directories, 11 files
+4 directories, 15 files
 
 ```
 <!-- DIRECTORY_TREE_END -->
