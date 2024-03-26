@@ -4,11 +4,11 @@ services:
   jupyterlab:
     build: 
       context: ./jupyter
-    image: custom-jupyterlab:latest
+    image: cdaprod/cda-jupyterlab:latest
     ports:
       - "8888:8888"
     volumes:
-      - ../usb/001/002:/dev/bus/usb/001/002  # Bind mount for Coral TPU USB access
+      #- ../usb/001/002:/dev/bus/usb/001/002  # Bind mount for Coral TPU USB access
       - jupyter_data:/home/jovyan/work  # Persistent volume for notebooks and data
     networks:
       - app_network
