@@ -1,0 +1,29 @@
+version: '3.8'
+
+services:
+  jupyterlab:
+    build: 
+      context: ./jupyter
+    image: custom-jupyterlab:latest
+    ports:
+      - "8888:8888"
+    volumes:
+      - ../usb/001/002:/dev/bus/usb/001/002  # Bind mount for Coral TPU USB access
+      - jupyter_data:/home/jovyan/work  # Persistent volume for notebooks and data
+    networks:
+      - app_network
+    environment:
+      - JUPYTER_ENABLE_LAB=yes
+    privileged: true
+
+networks:
+  app_network:
+    external: true
+
+volumes:
+  jupyter_data:
+    driver: local
+    driver_opts:
+      type: none
+      device: ${PWD}/jupyter_data
+      o: bind

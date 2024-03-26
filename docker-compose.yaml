@@ -66,6 +66,21 @@ services:
     networks:
       - app_network
 
+  jupyterlab:
+    build: 
+      context: ./jupyter
+    image: custom-jupyterlab:latest
+    ports:
+      - "8888:8888"
+    volumes:
+      - ../usb/001/002:/dev/bus/usb/001/002
+      - jupyter_data:/home/jovyan/work
+    networks:
+      - app_network
+    environment:
+      - JUPYTER_ENABLE_LAB=yes
+    privileged: true
+
 networks:
   app_network:
     driver: overlay
@@ -73,6 +88,12 @@ networks:
 volumes:
   minio_data:
   weaviate_data:
+  jupyter_data:
+    driver: local
+    driver_opts:
+      type: none
+      device: /opt/jupyter_data
+      o: bind
 
 secrets:
   minio_root_user:

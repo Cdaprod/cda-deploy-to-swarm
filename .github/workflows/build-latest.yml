@@ -7,12 +7,14 @@ on:
       - 'minio/**'
       - 'weaviate/**'
       - 'nginx/**'
+      - 'jupyter/**'
   pull_request:
     branches: [main]
     paths:
       - 'minio/**'
       - 'weaviate/**'
       - 'nginx/**'
+      - 'jupyter/**'
   workflow_dispatch:
 
 jobs:
@@ -49,7 +51,7 @@ jobs:
         push: true
         tags: cdaprod/cda-weaviate:latest
         platforms: linux/amd64,linux/arm64
-        
+
     - name: Build and push custom NGINX image
       uses: docker/build-push-action@v3
       with:
@@ -57,4 +59,13 @@ jobs:
         file: ./nginx/Dockerfile
         push: true
         tags: cdaprod/cda-nginx:latest
+        platforms: linux/amd64,linux/arm64
+
+    - name: Build and push custom JupyterLab image
+      uses: docker/build-push-action@v3
+      with:
+        context: ./jupyter
+        file: ./jupyter/Dockerfile
+        push: true
+        tags: cdaprod/custom-jupyterlab:latest
         platforms: linux/amd64,linux/arm64

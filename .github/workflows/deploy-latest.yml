@@ -38,3 +38,7 @@ jobs:
       - name: Deploy NGINX Stack
         run: |
           docker stack deploy -c ./nginx/docker-compose.nginx.yaml nginx_stack
+
+      - name: Deploy Jupytee Stack
+        run: |
+          docker stack deploy -c ./jupyter/docker-compose.jupyter.yaml jupyter_stack
