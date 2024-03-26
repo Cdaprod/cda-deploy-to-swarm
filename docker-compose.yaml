@@ -69,7 +69,7 @@ services:
   jupyterlab:
     build: 
       context: ./jupyter
-    image: custom-jupyterlab:latest
+    image: cdaprod/cda-jupyterlab:latest
     ports:
       - "8888:8888"
     volumes:

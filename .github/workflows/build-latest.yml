@@ -67,5 +67,5 @@ jobs:
         context: ./jupyter
         file: ./jupyter/Dockerfile
         push: true
-        tags: cdaprod/custom-jupyterlab:latest
+        tags: cdaprod/cda-jupyterlab:latest
         platforms: linux/amd64,linux/arm64
