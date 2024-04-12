@@ -23,11 +23,16 @@
 │   ├── Dockerfile
 │   ├── docker-compose.nginx.yaml
 │   └── nginx.conf
+├── tailscale
+│   ├── Dockerfile
+│   ├── README.md
+│   ├── docker-compose.tailscale.yaml
+│   └── entrypoint.sh
 └── weaviate
     ├── Dockerfile
     └── docker-compose.weaviate.yaml
 
-4 directories, 15 files
+5 directories, 19 files
 
 ```
 <!-- DIRECTORY_TREE_END -->
