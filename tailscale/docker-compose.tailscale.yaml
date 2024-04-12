@@ -1,0 +1,21 @@
+version: '3.8'
+services:
+  tailscale:
+    build:
+      context: ./tailscale
+    image: cdaprod/cda-tailscale:latest
+    volumes:
+      - /dev/net/tun:/dev/net/tun
+    cap_add:
+      - NET_ADMIN
+      - SYS_MODULE
+    security_opt:
+      - apparmor:unconfined
+    environment:
+      - TS_AUTH_KEY=${{ secrets.TS_AUTH_KEY }}
+    networks:
+      - app_network
+
+networks:
+  app_network:
+    driver: overlay

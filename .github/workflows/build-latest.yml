@@ -8,6 +8,7 @@ on:
       - 'weaviate/**'
       - 'nginx/**'
       - 'jupyter/**'
+      - 'tailscale/**'
   pull_request:
     branches: [main]
     paths:
@@ -15,6 +16,7 @@ on:
       - 'weaviate/**'
       - 'nginx/**'
       - 'jupyter/**'
+      - 'tailscale/**'
   workflow_dispatch:
 
 jobs:
@@ -68,4 +70,13 @@ jobs:
         file: ./jupyter/Dockerfile
         push: true
         tags: cdaprod/cda-jupyterlab:latest
+        platforms: linux/amd64,linux/arm64
+
+    - name: Build and push Tailscale image
+      uses: docker/build-push-action@v3
+      with:
+        context: ./tailscale
+        file: ./tailscale/Dockerfile
+        push: true
+        tags: cdaprod/cda-tailscale:latest
         platforms: linux/amd64,linux/arm64
