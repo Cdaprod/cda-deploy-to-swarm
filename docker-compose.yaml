@@ -80,12 +80,36 @@ services:
     environment:
       - JUPYTER_ENABLE_LAB=yes
     privileged: true
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+    command: ["jupyter", "lab", "--ip=0.0.0.0", "--allow-root", "--NotebookApp.token=''", "--NotebookApp.password=''"]
+
+  tailscale:
+    image: tailscale/tailscale
+    container_name: tailscale
+    cap_add:
+      - NET_ADMIN
+      - SYS_MODULE
+    security_opt:
+      - apparmor:unconfined
+    volumes:
+      - /dev/net/tun:/dev/net/tun
+      - tailscale_data:/var/lib/tailscale
+    environment:
+      - TS_AUTH_KEY=${TS_AUTH_KEY}
+    networks:
+      - app_network
+    command: tailscaled
 
 networks:
   app_network:
     driver: overlay
 
 volumes:
+  tailscale_data:
+    driver: local
   minio_data:
   weaviate_data:
   jupyter_data:

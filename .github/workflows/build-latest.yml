@@ -42,7 +42,7 @@ jobs:
         context: ./minio
         file: ./minio/Dockerfile
         push: true
-        tags: cdaprod/cda-minio:latest
+        tags: cdaprod/cda-minio:${{ github.sha }}
         platforms: linux/amd64,linux/arm64
 
     - name: Build and push custom Weaviate image
@@ -51,7 +51,7 @@ jobs:
         context: ./weaviate
         file: ./weaviate/Dockerfile
         push: true
-        tags: cdaprod/cda-weaviate:latest
+        tags: cdaprod/cda-weaviate:${{ github.sha }}
         platforms: linux/amd64,linux/arm64
 
     - name: Build and push custom NGINX image
@@ -60,7 +60,7 @@ jobs:
         context: ./nginx
         file: ./nginx/Dockerfile
         push: true
-        tags: cdaprod/cda-nginx:latest
+        tags: cdaprod/cda-nginx:${{ github.sha }}
         platforms: linux/amd64,linux/arm64
 
     - name: Build and push custom JupyterLab image
@@ -69,7 +69,7 @@ jobs:
         context: ./jupyter
         file: ./jupyter/Dockerfile
         push: true
-        tags: cdaprod/cda-jupyterlab:latest
+        tags: cdaprod/cda-jupyterlab:${{ github.sha }}
         platforms: linux/amd64,linux/arm64
 
     - name: Build and push Tailscale image
@@ -78,5 +78,5 @@ jobs:
         context: ./tailscale
         file: ./tailscale/Dockerfile
         push: true
-        tags: cdaprod/cda-tailscale:latest
+        tags: cdaprod/cda-tailscale:${{ github.sha }}
         platforms: linux/amd64,linux/arm64

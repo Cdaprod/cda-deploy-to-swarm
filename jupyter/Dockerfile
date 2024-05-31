@@ -11,3 +11,5 @@ RUN pip install minio weaviate-client transformers  openai langchain
 
 # Install requirements for OpenAI and LangChain integration
 RUN pip install pydantic bs4 poetry fastapi uvicorn docker unstructured
+
+CMD ["jupyter", "lab", "--ip=0.0.0.0", "--allow-root", "--NotebookApp.token=''", "--NotebookApp.password=''"]
