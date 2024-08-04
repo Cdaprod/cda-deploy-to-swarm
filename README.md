@@ -19,6 +19,9 @@
 │   ├── README.md
 │   ├── docker-compose.minio.yaml
 │   └── entrypoint.sh
+├── mqtt
+│   ├── Dockerfile
+│   └── docker-compose.mqtt.yaml
 ├── nginx
 │   ├── Dockerfile
 │   ├── docker-compose.nginx.yaml
@@ -32,7 +35,7 @@
     ├── Dockerfile
     └── docker-compose.weaviate.yaml
 
-5 directories, 19 files
+6 directories, 21 files
 
 ```
 <!-- DIRECTORY_TREE_END -->
