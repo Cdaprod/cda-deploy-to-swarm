@@ -1,0 +1,95 @@
+# .github/workflows/main.yml
+name: Full Steps Workflow
+
+on:
+  push:
+    branches:
+      - '**'
+  pull_request:
+    branches:
+      - '**'
+
+jobs:
+  build-test-tag-push-deploy:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        service:
+          - name: 'app-frontend'
+            context: './app-frontend'
+            image: 'cdaprod/app-frontend'
+            port: '3000'
+          - name: 'middleware-registry'
+            context: './middleware-registry'
+            image: 'cdaprod/middleware-registry'
+            port: '8080'
+          - name: 'middleware-infrastructure'
+            context: './middleware-infrastructure'
+            image: 'cdaprod/middleware-infrastructure'
+            port: '8081'
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Build Docker Image
+        run: |
+          docker build -t ${{ matrix.service.image }}:latest ${{ matrix.service.context }}
+      
+      - name: Run Tests
+        run: |
+          # Replace with your test command
+          docker run --rm ${{ matrix.service.image }}:latest sh -c "npm test || go test ./... || echo 'No tests specified'"
+      
+      - name: Get Git Version
+        id: get_version
+        run: |
+          git_version=$(git rev-parse --short HEAD)
+          echo "git_version=${git_version}" >> $GITHUB_OUTPUT
+
+      - name: Tag Docker Image
+        run: |
+          docker tag ${{ matrix.service.image }}:latest ${{ matrix.service.image }}:${{ steps.get_version.outputs.git_version }}
+
+      - name: Push Docker Images
+        run: |
+          docker push ${{ matrix.service.image }}:latest
+          docker push ${{ matrix.service.image }}:${{ steps.get_version.outputs.git_version }}
+
+      - name: Deploy to Host
+        run: |
+          ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }} \
+          "docker service update --image ${{ matrix.service.image }}:${{ steps.get_version.outputs.git_version }} ${ matrix.service.name }_service"
+
+      - name: Notify on Failure
+        if: ${{ failure() }}
+        run: |
+          echo "An error occurred while processing service: ${{ matrix.service.name }}"
+
+      - name: Take Screenshot
+        if: ${{ success() && matrix.service.name == 'app-frontend' }}
+        uses: mxschmitt/action-take-screenshot@v1
+        with:
+          url: 'http://your-app-url.com'
+          output: screenshot_${{ matrix.service.name }}.png
+
+      - name: Upload Screenshot
+        if: ${{ success() && matrix.service.name == 'app-frontend' }}
+        uses: actions/upload-artifact@v3
+        with:
+          name: screenshot_${{ matrix.service.name }}
+          path: screenshot_${{ matrix.service.name }}.png
+
+      - name: Clean up Docker resources
+        if: always()
+        run: |
+          docker system prune -af
+          docker builder prune -af
