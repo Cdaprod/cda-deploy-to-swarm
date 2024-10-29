@@ -10,6 +10,9 @@
 ├── DIRECTORY_TREE.txt
 ├── README.md
 ├── docker-compose.yaml
+├── docs
+│   ├── 00-CLUSTERING-MINIO.md
+│   └── 01-PROVISON-KUBERNETES-STORAGE.md
 ├── jupyter
 │   ├── Dockerfile
 │   ├── README.md
@@ -35,7 +38,7 @@
     ├── Dockerfile
     └── docker-compose.weaviate.yaml
 
-6 directories, 21 files
+7 directories, 23 files
 
 ```
 <!-- DIRECTORY_TREE_END -->
